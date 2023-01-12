@@ -3,16 +3,7 @@ import ItemContext from '../ItemContext'
 
 const Items = ({items}) => {
   const {openModal} = useContext(ItemContext);
-
-  // if(items.length === 1) {
-  //   return (
-  //       <tr onClick={() => openModal(items.id)} style={{backgroundColor: items.color}}>
-  //         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{items.id}</td>
-  //         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{items.name}</td>
-  //         <td className="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">{items.year}</td>
-  //       </tr>
-  //   )
-  // }else {
+  
     return (
     <>
       {items.map((item, index) => {

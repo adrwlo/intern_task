@@ -2,11 +2,14 @@ import React, {useContext, useState} from 'react';
 import Items from './Items';
 import ItemContext from '../ItemContext';
 import Pagination from './Pagination';
+import FilterItem from './FilterItem';
+import FilterError from './FilterError';
 
 const ItemsTable = () => {
 
     const {apiData} = useContext(ItemContext);
     const {filterData} = useContext(ItemContext);
+    const {filterError} = useContext(ItemContext);
     const {modalIsOpen} = useContext(ItemContext);
     const {closeModal} = useContext(ItemContext);
     const {modalData} = useContext(ItemContext);
@@ -20,14 +23,6 @@ const ItemsTable = () => {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
     const currentItems = apiData.slice(indexOfFirstItem, indexOfLastItem);
-
-    console.log(currentItems);
-
-    console.log("API DATA:" + apiData);
-    console.log("API DATA LENGTH:" + apiData.length)
-    console.log("FILTER DATA: " + filterData);
-    console.log("MODAL IS OPEN:" + modalIsOpen);
-    console.log("MODAL DATA:" + modalData);
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -50,9 +45,11 @@ const ItemsTable = () => {
     }
 
 
-  return (
+    return (
       <>
-    <div className="flex flex-col m-10">
+      {filterError === true ? <FilterError/> 
+      : 
+      <div className="flex flex-col m-10">
         <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="overflow-hidden">
@@ -71,13 +68,17 @@ const ItemsTable = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <Items items={currentItems}/>          
+                            {filterData.length === 0 ? <Items items={currentItems}></Items> 
+                            :
+                            <FilterItem filterData={filterData}/>
+                            }
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
+    </div>}
+    
 
     {modalIsOpen ? 
     <>
@@ -91,7 +92,7 @@ const ItemsTable = () => {
         </div>
         </> : ''}
 
-    {apiData.length > 1 ? (
+    {filterError === false && filterData.length === 0 ? (
          <Pagination 
             itemsPerPage={itemsPerPage}
             totalItems={apiData.length}
@@ -99,8 +100,8 @@ const ItemsTable = () => {
             paginateNext={paginateNext}
             paginatePrev={paginatePrev}
         />
-    ) : ("")
-    }</>
+    ) : ("")}
+    </>
   )
 }
 
